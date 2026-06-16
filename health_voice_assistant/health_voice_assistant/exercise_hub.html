@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Exercise Hub</title>
+
+<style>
+body {
+    font-family: Arial;
+    text-align: center;
+    background: #fff0f5;
+}
+
+header {
+    background: #e91e63;
+    color: white;
+    padding: 15px;
+    font-size: 22px;
+}
+
+button {
+    padding: 10px 15px;
+    margin: 10px;
+    background: #e91e63;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.video {
+    margin: 10px;
+    padding: 10px;
+    background: white;
+    border-radius: 10px;
+    cursor: pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>FemAI Care - Exercise Hub</header>
+
+<h2>Select Language (Voice or Click)</h2>
+
+<button onclick="startVoice()">🎤 Speak Language</button>
+
+<br><br>
+
+<button onclick="showVideos('english')">English</button>
+<button onclick="showVideos('hindi')">Hindi</button>
+<button onclick="showVideos('kannada')">Kannada</button>
+<button onclick="showVideos('telugu')">Telugu</button>
+
+<div id="videos"></div>
+
+<script>
+const data = {
+    english: [
+        {title: "PCOS Workout", id: "2pLT-olgUJs"},
+        {title: "Weight Loss Yoga", id: "VaoV1PrYft4"}
+    ],
+    hindi: [
+        {title: "PCOS Exercise Hindi", id: "ml6cT4AZdqI"}
+    ],
+    kannada: [
+        {title: "Workout Kannada", id: "UItWltVZZmE"}
+    ],
+    telugu: [
+        {title: "Workout Telugu", id: "9Vh0sLk6H7E"}
+    ]
+};
+
+// 🔊 SPEAK (browser)
+function speak(text) {
+    const msg = new SpeechSynthesisUtterance(text);
+    speechSynthesis.speak(msg);
+}
+
+// SHOW VIDEOS
+function showVideos(lang) {
+    let html = "<h3>" + lang.toUpperCase() + " Videos</h3>";
+
+    data[lang].forEach(v => {
+        html += `
+            <div class="video" onclick="openVideo('${v.id}')">
+                ${v.title}
+            </div>
+        `;
+    });
+
+    document.getElementById("videos").innerHTML = html;
+
+    speak("Showing " + lang + " exercises");
+}
+
+// OPEN VIDEO
+function openVideo(id) {
+    window.open("https://www.youtube.com/watch?v=" + id, "_blank");
+}
+
+// 🎤 VOICE INPUT
+function startVoice() {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+    recognition.lang = "en-IN";
+    recognition.start();
+
+    alert("Say English, Hindi, Kannada or Telugu");
+
+    recognition.onresult = function(event) {
+        let speech = event.results[0][0].transcript.toLowerCase();
+
+        if (speech.includes("english")) {
+            showVideos("english");
+        } 
+        else if (speech.includes("hindi")) {
+            showVideos("hindi");
+        } 
+        else if (speech.includes("kannada")) {
+            showVideos("kannada");
+        } 
+        else if (speech.includes("telugu")) {
+            showVideos("telugu");
+        } 
+        else {
+            alert("Language not recognized");
+        }
+    };
+}
+</script>
+
+</body>
+</html>
